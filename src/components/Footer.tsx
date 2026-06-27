@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 export default function Footer() {
   return (
@@ -25,6 +26,19 @@ export default function Footer() {
               info@jalour.com
             </a>
             <span>www.jalour.com</span>
+            <div className="mt-2 flex gap-4">
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-jalour-blue"
+                >
+                  {social.label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 

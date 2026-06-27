@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ContactForm from "@/components/ContactForm";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 export const metadata: Metadata = {
   title: "Contact | JALOUR",
@@ -52,6 +53,24 @@ export default function ContactPage() {
                 Web
               </h2>
               <p className="mt-3 text-sm text-jalour-grey">www.jalour.com</p>
+            </div>
+            <div>
+              <h2 className="font-display text-xl font-semibold uppercase tracking-jalour text-jalour-white">
+                Follow Us
+              </h2>
+              <div className="mt-3 flex gap-6">
+                {SOCIAL_LINKS.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm tracking-jalour uppercase text-jalour-grey hover:text-jalour-blue"
+                  >
+                    {social.label}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </div>
