@@ -4,6 +4,7 @@ export type Project = {
   category: string;
   location: string;
   status: string;
+  tagline?: string;
   summary: string;
   description: string[];
   heroImage: string;
@@ -19,7 +20,8 @@ export const PROJECTS: Project[] = [
     name: "Nurv",
     category: "Commercial Projects",
     location: "El Shorouk, Cairo",
-    status: "Opening 2026",
+    status: "Launching 2026",
+    tagline: "At the Core of Movement",
     summary:
       "A place that inspires, a place that belongs. An upscale lifestyle destination blending dining, retail, wellness, and culture.",
     description: [

@@ -133,6 +133,48 @@ export default function Home() {
         </section>
       )}
 
+      {/* Built for business */}
+      <section className="border-t border-white/10 bg-jalour-black py-24">
+        <div className="mx-auto max-w-7xl px-6 md:px-10">
+          <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+            More Than Square Meters
+          </p>
+          <h2 className="mt-3 max-w-2xl font-display text-3xl font-semibold uppercase leading-tight text-jalour-white md:text-4xl">
+            Real Value
+          </h2>
+          <div className="mt-10 grid gap-2 sm:grid-cols-2">
+            <div className="relative aspect-[4/5] overflow-hidden">
+              <Image
+                src="/images/jalour/desk-call.jpg"
+                alt="Built on expertise, designed for business"
+                fill
+                className="object-cover"
+                sizes="(min-width: 768px) 50vw, 100vw"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-jalour-black/80 to-transparent p-6">
+                <p className="text-xs tracking-jalour uppercase text-jalour-white">
+                  Built on Expertise, Designed for Business
+                </p>
+              </div>
+            </div>
+            <div className="relative aspect-[16/9] overflow-hidden">
+              <Image
+                src="/images/jalour/meeting-table.jpg"
+                alt="More than square meters, real value"
+                fill
+                className="object-cover"
+                sizes="(min-width: 768px) 50vw, 100vw"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-jalour-black/80 to-transparent p-6">
+                <p className="text-xs tracking-jalour uppercase text-jalour-white">
+                  A New Class of Workspace Awaits
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA band */}
       <section className="border-t border-white/10 bg-jalour-blue py-20">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-6 md:flex-row md:items-center md:px-10">

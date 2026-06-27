@@ -61,6 +61,11 @@ export default async function ProjectDetailPage({
           <h1 className="mt-2 font-display text-4xl font-semibold uppercase leading-tight text-jalour-white md:text-6xl">
             {project.name}
           </h1>
+          {project.tagline && (
+            <p className="mt-3 text-sm italic tracking-wide text-jalour-grey">
+              {project.tagline}
+            </p>
+          )}
           <span className="mt-4 inline-block text-xs tracking-jalour uppercase text-jalour-blue">
             {project.status}
           </span>
