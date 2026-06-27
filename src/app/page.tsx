@@ -59,18 +59,30 @@ export default function Home() {
               {
                 title: "Bold Living",
                 copy: "Spaces designed to make presence felt, not just seen.",
+                image: "/images/nurv/hero.jpg",
               },
               {
                 title: "Immersive Spaces",
                 copy: "Environments that amplify the people within them.",
+                image: "/images/nurv/wellness-lounge.jpg",
               },
               {
                 title: "Refined Transformation",
                 copy: "Architecture and design-led thinking, end to end.",
+                image: "/images/nurv/roof-track.jpg",
               },
             ].map((item) => (
               <div key={item.title} className="border-t border-jalour-blue pt-6">
-                <h3 className="font-display text-xl font-semibold uppercase tracking-jalour text-jalour-white">
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                  />
+                </div>
+                <h3 className="mt-6 font-display text-xl font-semibold uppercase tracking-jalour text-jalour-white">
                   {item.title}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-jalour-grey">
