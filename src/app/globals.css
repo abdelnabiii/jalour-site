@@ -1,26 +1,38 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-jalour-blue: #2e7ccc;
+  --color-jalour-blue-dark: #163a63;
+  --color-jalour-grey: #bebfbe;
+  --color-jalour-black: #0b0a0b;
+  --color-jalour-white: #ffffff;
+
+  --background: var(--color-jalour-black);
+  --foreground: var(--color-jalour-white);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-jalour-blue: var(--color-jalour-blue);
+  --color-jalour-blue-dark: var(--color-jalour-blue-dark);
+  --color-jalour-grey: var(--color-jalour-grey);
+  --color-jalour-black: var(--color-jalour-black);
+  --color-jalour-white: var(--color-jalour-white);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono-jalour);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-mono-jalour), ui-monospace, monospace;
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+.tracking-jalour {
+  letter-spacing: 0.12em;
 }
