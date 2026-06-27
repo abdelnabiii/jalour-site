@@ -30,7 +30,7 @@ export const PROJECTS: Project[] = [
     heroImage: "/images/nurv/hero.jpg",
     gallery: [
       "/images/nurv/hero.jpg",
-      "/images/nurv/day-night.jpg",
+      "/images/nurv/wellness-lounge.jpg",
       "/images/nurv/roof-track.jpg",
     ],
     floors: [
