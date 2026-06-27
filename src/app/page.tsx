@@ -1,18 +1,23 @@
+import Image from "next/image";
 import Link from "next/link";
+import { PROJECTS } from "@/lib/projects";
 
 export default function Home() {
+  const featured = PROJECTS.find((p) => p.slug === "nurv");
+
   return (
     <div>
       {/* Hero */}
-      <section className="relative flex min-h-[90vh] items-center overflow-hidden bg-gradient-to-b from-jalour-blue-dark via-jalour-black to-jalour-black">
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 8px)",
-          }}
+      <section className="relative flex min-h-[90vh] items-center overflow-hidden">
+        <Image
+          src="/images/nurv/hero.jpg"
+          alt="Nurv by Jalour"
+          fill
+          priority
+          className="object-cover"
         />
-        <div className="relative mx-auto w-full max-w-7xl px-6 py-32 md:px-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-jalour-black/80 via-jalour-black/70 to-jalour-black" />
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-32 md:px-10">
           <p className="text-xs tracking-jalour uppercase text-jalour-grey">
             Jalour &mdash; 2025
           </p>
@@ -76,6 +81,45 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Featured project */}
+      {featured && (
+        <section className="border-t border-white/10 bg-jalour-black py-24">
+          <div className="mx-auto max-w-7xl px-6 md:px-10">
+            <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+              Featured Project
+            </p>
+            <Link
+              href={`/projects/${featured.slug}`}
+              className="group mt-8 grid gap-8 md:grid-cols-2 md:items-center"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={featured.heroImage}
+                  alt={featured.name}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                />
+              </div>
+              <div>
+                <span className="text-xs tracking-jalour uppercase text-jalour-grey">
+                  {featured.category} &mdash; {featured.location}
+                </span>
+                <h2 className="mt-3 font-display text-3xl font-semibold uppercase tracking-jalour text-jalour-white md:text-5xl">
+                  {featured.name}
+                </h2>
+                <p className="mt-4 max-w-md text-sm leading-relaxed text-jalour-grey">
+                  {featured.summary}
+                </p>
+                <span className="mt-6 inline-block text-xs tracking-jalour uppercase text-jalour-blue underline-offset-4 group-hover:underline">
+                  View Project &rarr;
+                </span>
+              </div>
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* CTA band */}
       <section className="border-t border-white/10 bg-jalour-blue py-20">

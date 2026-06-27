@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About | JALOUR",
@@ -41,6 +42,15 @@ export default function AboutPage() {
             truly drives them forward.
           </p>
         </div>
+      </section>
+
+      <section className="relative aspect-[16/7] w-full overflow-hidden border-b border-white/10">
+        <Image
+          src="/images/nurv/day-night.jpg"
+          alt="Jalour development"
+          fill
+          className="object-cover"
+        />
       </section>
 
       <section className="border-b border-white/10 bg-jalour-black py-20">

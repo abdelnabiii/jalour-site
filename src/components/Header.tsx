@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/Logo";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -11,11 +12,8 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-jalour-black/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
-        <Link
-          href="/"
-          className="font-display text-2xl font-semibold tracking-jalour text-jalour-white"
-        >
-          JALOUR<span className="align-super text-xs">®</span>
+        <Link href="/" className="block">
+          <Logo className="h-7 w-auto" />
         </Link>
         <nav className="hidden items-center gap-10 text-xs tracking-jalour uppercase text-jalour-grey md:flex">
           {NAV_LINKS.map((link) => (

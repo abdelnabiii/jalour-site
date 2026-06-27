@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/Logo";
 
 export default function Footer() {
   return (
@@ -6,9 +7,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-14 md:px-10">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="font-display text-2xl font-semibold tracking-jalour">
-              JALOUR<span className="align-super text-xs">®</span>
-            </p>
+            <Logo className="h-6 w-auto" />
             <p className="mt-4 max-w-xs text-xs tracking-jalour uppercase text-jalour-grey">
               Beyond Spaces. Building Focus.
             </p>
