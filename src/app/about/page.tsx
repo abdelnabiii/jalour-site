@@ -70,7 +70,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-b border-white/10 bg-jalour-black py-20">
+      <section className="bg-jalour-black py-20">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <p className="text-xs tracking-jalour uppercase text-jalour-grey">
             Brand Values
@@ -86,35 +86,6 @@ export default function AboutPage() {
                 </p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-jalour-black py-20">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-2 md:px-10">
-          <div>
-            <h2 className="font-display text-2xl font-semibold uppercase tracking-jalour text-jalour-white">
-              The Creative Concept
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-jalour-grey">
-              JALOUR&rsquo;s visual identity is built around a bold,
-              high-contrast design language where humans are cast in shadow
-              and the space around them glows. This intentional reversal of
-              light highlights not the person, but their presence &mdash;
-              making the individual feel larger, deeper, and more iconic.
-            </p>
-          </div>
-          <div>
-            <h2 className="font-display text-2xl font-semibold uppercase tracking-jalour text-jalour-white">
-              The J
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-jalour-grey">
-              At the heart of JALOUR&rsquo;s identity stands a single,
-              iconic element: the letter J. Simple in form, yet rich in
-              meaning &mdash; the J becomes a visual symbol of strength,
-              clarity, and presence. It introduces the brand not just by
-              name, but by attitude.
-            </p>
           </div>
         </div>
       </section>
