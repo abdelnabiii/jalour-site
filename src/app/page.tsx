@@ -142,36 +142,10 @@ export default function Home() {
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-semibold uppercase leading-tight text-jalour-white md:text-4xl">
             Real Value
           </h2>
-          <div className="mt-10 grid gap-2 sm:grid-cols-2">
-            <div className="relative aspect-[4/5] overflow-hidden">
-              <Image
-                src="/images/jalour/desk-call.jpg"
-                alt="Built on expertise, designed for business"
-                fill
-                className="object-cover"
-                sizes="(min-width: 768px) 50vw, 100vw"
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-jalour-black/80 to-transparent p-6">
-                <p className="text-xs tracking-jalour uppercase text-jalour-white">
-                  Built on Expertise, Designed for Business
-                </p>
-              </div>
-            </div>
-            <div className="relative aspect-[16/9] overflow-hidden">
-              <Image
-                src="/images/jalour/meeting-table.jpg"
-                alt="More than square meters, real value"
-                fill
-                className="object-cover"
-                sizes="(min-width: 768px) 50vw, 100vw"
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-jalour-black/80 to-transparent p-6">
-                <p className="text-xs tracking-jalour uppercase text-jalour-white">
-                  A New Class of Workspace Awaits
-                </p>
-              </div>
-            </div>
-          </div>
+          <p className="mt-6 max-w-md text-sm leading-relaxed text-jalour-grey">
+            Built on expertise, designed for business &mdash; a new class
+            of workspace awaits.
+          </p>
         </div>
       </section>
 
