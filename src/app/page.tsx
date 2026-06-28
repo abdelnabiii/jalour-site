@@ -59,17 +59,17 @@ export default function Home() {
               {
                 title: "Bold Living",
                 copy: "Spaces designed to make presence felt, not just seen.",
-                image: "/images/jalour/profile-silhouette.jpg",
+                image: "/images/jalour/window-silhouette.jpg",
               },
               {
                 title: "Immersive Spaces",
                 copy: "Environments that amplify the people within them.",
-                image: "/images/jalour/desk-call.jpg",
+                image: "/images/jalour/lounge-silhouette.jpg",
               },
               {
                 title: "Refined Transformation",
                 copy: "Architecture and design-led thinking, end to end.",
-                image: "/images/jalour/meeting-table.jpg",
+                image: "/images/jalour/blue-texture.jpg",
               },
             ].map((item) => (
               <div key={item.title} className="border-t border-jalour-blue pt-6">
