@@ -10,8 +10,8 @@ export default function Home() {
       {/* Hero */}
       <section className="relative flex min-h-[90vh] items-center overflow-hidden">
         <Image
-          src="/images/nurv/hero.jpg"
-          alt="Nurv by Jalour"
+          src="/images/jalour/hallway-silhouettes.jpg"
+          alt="Jalour"
           fill
           priority
           className="object-cover"
@@ -59,17 +59,17 @@ export default function Home() {
               {
                 title: "Bold Living",
                 copy: "Spaces designed to make presence felt, not just seen.",
-                image: "/images/nurv/hero.jpg",
+                image: "/images/jalour/profile-silhouette.jpg",
               },
               {
                 title: "Immersive Spaces",
                 copy: "Environments that amplify the people within them.",
-                image: "/images/nurv/wellness-lounge.jpg",
+                image: "/images/jalour/desk-call.jpg",
               },
               {
                 title: "Refined Transformation",
                 copy: "Architecture and design-led thinking, end to end.",
-                image: "/images/nurv/roof-track.jpg",
+                image: "/images/jalour/meeting-table.jpg",
               },
             ].map((item) => (
               <div key={item.title} className="border-t border-jalour-blue pt-6">
