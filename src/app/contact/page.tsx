@@ -30,6 +30,17 @@ export default function ContactPage() {
           <div className="flex flex-col gap-10">
             <div>
               <h2 className="font-display text-xl font-semibold uppercase tracking-jalour text-jalour-white">
+                Hotline
+              </h2>
+              <a
+                href="tel:17836"
+                className="mt-3 inline-block text-sm text-jalour-grey hover:text-jalour-blue"
+              >
+                17836
+              </a>
+            </div>
+            <div>
+              <h2 className="font-display text-xl font-semibold uppercase tracking-jalour text-jalour-white">
                 Email
               </h2>
               <a

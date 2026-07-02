@@ -2,18 +2,14 @@
 
 import { useState } from "react";
 
-// Change this to update the dashboard access password
 const DASHBOARD_PASSWORD = "NURV2026";
 
 type Stage = "form" | "review" | "verify" | "dashboard" | "declined";
 
 const mono: React.CSSProperties = { fontFamily: "'Space Mono', monospace" };
 
-// Disqualifying answers — if any of these are selected the applicant is declined
 const DISQUALIFY = {
-  role: ["Student", "Employee — entry level"],
   budget: ["Below EGP 500,000"],
-  portfolio: ["No — this would be my first investment"],
   liquidity: ["No available liquid capital"],
 };
 
@@ -23,22 +19,29 @@ export default function InvestorPage() {
   const [passwordError, setPasswordError] = useState(false);
   const [formError, setFormError] = useState("");
 
-  // Form fields
+  // Personal
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [role, setRole] = useState("");
-  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [occupation, setOccupation] = useState("");
+  const [education, setEducation] = useState("");
+  const [socialLinks, setSocialLinks] = useState("");
+
+  // Investment
   const [budget, setBudget] = useState("");
-  const [portfolio, setPortfolio] = useState("");
   const [liquidity, setLiquidity] = useState("");
+  const [otherProjects, setOtherProjects] = useState("");
   const [objective, setObjective] = useState("");
+
+  // Lifestyle
+  const [clubMemberships, setClubMemberships] = useState("");
+  const [spouseName, setSpouseName] = useState("");
+  const [spouseOccupation, setSpouseOccupation] = useState("");
 
   function isDisqualified() {
     return (
-      DISQUALIFY.role.includes(role) ||
       DISQUALIFY.budget.includes(budget) ||
-      DISQUALIFY.portfolio.includes(portfolio) ||
       DISQUALIFY.liquidity.includes(liquidity)
     );
   }
@@ -46,13 +49,16 @@ export default function InvestorPage() {
   function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!name.trim() || !emailOk || !phone.trim() || !role || !budget || !portfolio || !liquidity || !objective) {
-      setFormError("Please complete all fields before continuing.");
+    if (!name.trim() || !phone.trim() || !emailOk || !occupation.trim() || !education.trim() || !budget || !liquidity || !objective) {
+      setFormError("Please complete all required fields before continuing.");
       return;
     }
     setFormError("");
-    // In production: send lead data to CRM/webhook here
-    console.log("NURV investor application:", { name, email, phone, role, company, budget, portfolio, liquidity, objective });
+    console.log("NURV investor application:", {
+      name, phone, email, address, occupation, education, socialLinks,
+      budget, liquidity, otherProjects, objective,
+      clubMemberships, spouseName, spouseOccupation,
+    });
     setStage("review");
   }
 
@@ -87,10 +93,10 @@ export default function InvestorPage() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0B0A0B", color: "#fff", fontFamily: "'Space Grotesk', sans-serif", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px" }}>
+    <div style={{ minHeight: "100vh", background: "#0B0A0B", color: "#fff", fontFamily: "'Space Grotesk', sans-serif", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
       <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
-      <div style={{ width: "100%", maxWidth: 560 }}>
+      <div style={{ width: "100%", maxWidth: 580 }}>
         {/* Logo */}
         <div style={{ marginBottom: 48 }}>
           <div style={{ fontWeight: 700, fontSize: 20, letterSpacing: "0.14em", textTransform: "uppercase" }}>NURV</div>
@@ -99,65 +105,56 @@ export default function InvestorPage() {
           </div>
         </div>
 
-        {/* ── STAGE: APPLICATION FORM ── */}
+        {/* ── FORM ── */}
         {stage === "form" && (
           <>
             <div style={{ ...mono, fontSize: 9, letterSpacing: "0.25em", color: "#2E7CCC", textTransform: "uppercase", marginBottom: 8 }}>
-              Investor Qualification
+              Investor Application
             </div>
             <h1 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2, marginBottom: 10 }}>
               Apply for Access
             </h1>
-            <p style={{ ...mono, fontSize: 11, color: "rgba(255,255,255,0.45)", lineHeight: 1.9, marginBottom: 36, maxWidth: 480 }}>
-              NURV investor access is by application only. We review each submission to ensure our
-              tools are matched to qualified investors. This takes under two minutes.
+            <p style={{ ...mono, fontSize: 11, color: "rgba(255,255,255,0.45)", lineHeight: 1.9, marginBottom: 36, maxWidth: 500 }}>
+              NURV investor access is by application only. Complete the form below — it takes under
+              three minutes. All information is kept strictly confidential.
             </p>
 
             <form onSubmit={handleFormSubmit}>
+              <Divider label="Personal Information" />
+
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 20px" }}>
-                <Field label="Full Name">
+                <Field label="Full Name *">
                   <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your full name" style={inputStyle} />
                 </Field>
-                <Field label="Phone">
+                <Field label="Mobile Number *">
                   <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+20 1XX XXX XXXX" style={inputStyle} />
                 </Field>
               </div>
 
-              <Field label="Email Address">
+              <Field label="Email Address *">
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@company.com" style={inputStyle} />
               </Field>
 
-              <Divider label="Professional Background" />
-
-              <Field label="Current Role / Position">
-                <SelectField value={role} onChange={setRole} placeholder="— Select your position —">
-                  <optgroup label="Executive & Ownership">
-                    <option>CEO / Founder / Owner</option>
-                    <option>C-Suite Executive (CFO, COO, CMO, etc.)</option>
-                    <option>Managing Director / General Manager</option>
-                    <option>Board Member / Chairman</option>
-                  </optgroup>
-                  <optgroup label="Professional">
-                    <option>Senior Director / VP</option>
-                    <option>Doctor / Lawyer / Architect</option>
-                    <option>Investment / Finance Professional</option>
-                    <option>Entrepreneur (active ventures)</option>
-                  </optgroup>
-                  <optgroup label="Other">
-                    <option>Employee — entry level</option>
-                    <option>Student</option>
-                    <option>Prefer not to say</option>
-                  </optgroup>
-                </SelectField>
+              <Field label="Address">
+                <input type="text" value={address} onChange={e => setAddress(e.target.value)} placeholder="City / Area" style={inputStyle} />
               </Field>
 
-              <Field label="Company / Organisation (optional)">
-                <input type="text" value={company} onChange={e => setCompany(e.target.value)} placeholder="Your company name" style={inputStyle} />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 20px" }}>
+                <Field label="Occupation / Job Title *">
+                  <input type="text" value={occupation} onChange={e => setOccupation(e.target.value)} placeholder="e.g. CEO, Doctor, Engineer" style={inputStyle} />
+                </Field>
+                <Field label="Educational Background *">
+                  <input type="text" value={education} onChange={e => setEducation(e.target.value)} placeholder="University / Field of study" style={inputStyle} />
+                </Field>
+              </div>
+
+              <Field label="Social Media Links (Instagram / LinkedIn / Facebook)">
+                <input type="text" value={socialLinks} onChange={e => setSocialLinks(e.target.value)} placeholder="@handle or profile URLs" style={inputStyle} />
               </Field>
 
               <Divider label="Investment Profile" />
 
-              <Field label="Investment Budget for This Project">
+              <Field label="Investment Budget for This Project *">
                 <SelectField value={budget} onChange={setBudget} placeholder="— Select your range —">
                   <option>Below EGP 500,000</option>
                   <option>EGP 500,000 – 1,000,000</option>
@@ -167,17 +164,7 @@ export default function InvestorPage() {
                 </SelectField>
               </Field>
 
-              <Field label="Existing Real Estate Investment Portfolio">
-                <SelectField value={portfolio} onChange={setPortfolio} placeholder="— Select —">
-                  <option>No — this would be my first investment</option>
-                  <option>Yes — 1 to 2 properties</option>
-                  <option>Yes — 3 to 5 properties</option>
-                  <option>Yes — more than 5 properties</option>
-                  <option>Yes — through a fund or company</option>
-                </SelectField>
-              </Field>
-
-              <Field label="Available Liquid Capital for Immediate Investment">
+              <Field label="Available Liquid Capital *">
                 <SelectField value={liquidity} onChange={setLiquidity} placeholder="— Select —">
                   <option>No available liquid capital</option>
                   <option>Yes — available within 30 days</option>
@@ -185,7 +172,7 @@ export default function InvestorPage() {
                 </SelectField>
               </Field>
 
-              <Field label="Primary Investment Objective">
+              <Field label="Primary Investment Objective *">
                 <SelectField value={objective} onChange={setObjective} placeholder="— Select your goal —">
                   <option>Monthly passive income (rental yield)</option>
                   <option>Long-term capital appreciation</option>
@@ -195,6 +182,25 @@ export default function InvestorPage() {
                 </SelectField>
               </Field>
 
+              <Field label="Other Real Estate Investments Owned">
+                <input type="text" value={otherProjects} onChange={e => setOtherProjects(e.target.value)} placeholder="e.g. Marassi, Zed East, Palm Hills, etc." style={inputStyle} />
+              </Field>
+
+              <Divider label="Lifestyle & Background" />
+
+              <Field label="Club Memberships">
+                <input type="text" value={clubMemberships} onChange={e => setClubMemberships(e.target.value)} placeholder="e.g. Gezira, Wadi Degla, Maadi Club" style={inputStyle} />
+              </Field>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 20px" }}>
+                <Field label="Spouse / Partner Name">
+                  <input type="text" value={spouseName} onChange={e => setSpouseName(e.target.value)} placeholder="Full name" style={inputStyle} />
+                </Field>
+                <Field label="Spouse / Partner Occupation">
+                  <input type="text" value={spouseOccupation} onChange={e => setSpouseOccupation(e.target.value)} placeholder="Occupation / title" style={inputStyle} />
+                </Field>
+              </div>
+
               {formError && (
                 <p style={{ ...mono, fontSize: 11, color: "#e05555", marginBottom: 16 }}>{formError}</p>
               )}
@@ -203,13 +209,13 @@ export default function InvestorPage() {
             </form>
 
             <p style={{ ...mono, fontSize: 9, color: "#3a3a3a", letterSpacing: "0.06em", lineHeight: 1.8, marginTop: 28 }}>
-              Applications are reviewed immediately. Qualifying investors receive dashboard access
-              within this session. All information is kept strictly confidential.
+              * Required fields. Applications are reviewed immediately. Qualifying investors receive
+              dashboard access within this session.
             </p>
           </>
         )}
 
-        {/* ── STAGE: REVIEW SUMMARY ── */}
+        {/* ── REVIEW ── */}
         {stage === "review" && (
           <>
             <div style={{ ...mono, fontSize: 9, letterSpacing: "0.25em", color: "#2E7CCC", textTransform: "uppercase", marginBottom: 8 }}>
@@ -220,35 +226,39 @@ export default function InvestorPage() {
             </h1>
 
             <div style={{ background: "#1A191A", border: "1px solid #2A292A", padding: "24px", marginBottom: 24 }}>
-              {[
+              {([
                 ["Name", name],
-                ["Role", role],
-                company && ["Company", company],
-                ["Investment Budget", budget],
-                ["Portfolio", portfolio],
+                ["Phone", phone],
+                ["Email", email],
+                address && ["Address", address],
+                ["Occupation", occupation],
+                ["Education", education],
+                socialLinks && ["Social Media", socialLinks],
+                ["Budget", budget],
                 ["Liquidity", liquidity],
                 ["Objective", objective],
-              ].filter(Boolean).map((row) => {
-                const [k, v] = row as [string, string];
+                otherProjects && ["Other Investments", otherProjects],
+                clubMemberships && ["Club Memberships", clubMemberships],
+                spouseName && ["Spouse", spouseName],
+              ] as (string[] | false)[]).filter(Boolean).map((row) => {
+                const [k, v] = row as string[];
                 return (
                   <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "9px 0", borderBottom: "1px solid #2A292A" }}>
-                    <span style={{ ...mono, fontSize: 10, color: "#6b6b6b", letterSpacing: "0.1em", textTransform: "uppercase" }}>{k}</span>
-                    <span style={{ ...mono, fontSize: 11, color: "#fff", maxWidth: "55%", textAlign: "right" }}>{v}</span>
+                    <span style={{ ...mono, fontSize: 10, color: "#6b6b6b", letterSpacing: "0.1em", textTransform: "uppercase", flexShrink: 0, marginRight: 16 }}>{k}</span>
+                    <span style={{ ...mono, fontSize: 11, color: "#fff", maxWidth: "60%", textAlign: "right" }}>{v}</span>
                   </div>
                 );
               })}
             </div>
 
-            <button onClick={handleReviewConfirm} style={primaryBtn}>
-              Confirm & Get Access →
-            </button>
+            <button onClick={handleReviewConfirm} style={primaryBtn}>Confirm & Get Access →</button>
             <button onClick={() => setStage("form")} style={{ ...primaryBtn, background: "transparent", borderColor: "#2A292A", color: "#6b6b6b", marginTop: 10 }}>
               ← Edit Application
             </button>
           </>
         )}
 
-        {/* ── STAGE: DECLINED ── */}
+        {/* ── DECLINED ── */}
         {stage === "declined" && (
           <>
             <div style={{ padding: "28px 24px", border: "1px solid rgba(200,169,110,0.25)", background: "rgba(200,169,110,0.06)", marginBottom: 28 }}>
@@ -259,13 +269,13 @@ export default function InvestorPage() {
                 Not Eligible at This Time
               </h2>
               <p style={{ ...mono, fontSize: 11, color: "rgba(255,255,255,0.5)", lineHeight: 1.9 }}>
-                NURV shares are structured for qualified investors with an established investment
-                background and available capital. Based on your profile, this product may not be
-                the right fit at this stage.
+                NURV shares are structured for investors with available capital ready to deploy.
+                Based on your profile, this opportunity may not be the right fit at this stage.
               </p>
               <p style={{ ...mono, fontSize: 11, color: "rgba(255,255,255,0.5)", lineHeight: 1.9, marginTop: 12 }}>
-                Our team will be in touch at <strong style={{ color: "#fff" }}>{email}</strong> if
-                circumstances change or other opportunities arise.
+                Our team will follow up at <strong style={{ color: "#fff" }}>{email}</strong> if
+                a suitable opportunity arises. You can also reach us on{" "}
+                <strong style={{ color: "#fff" }}>17836</strong>.
               </p>
             </div>
             <a href="/" style={{ ...primaryBtn, display: "block", textDecoration: "none", textAlign: "center" }}>
@@ -274,7 +284,7 @@ export default function InvestorPage() {
           </>
         )}
 
-        {/* ── STAGE: ACCESS CODE ── */}
+        {/* ── VERIFY ── */}
         {stage === "verify" && (
           <>
             <div style={{ padding: "20px 24px", border: "1px solid #1a4a7a", background: "rgba(46,124,204,0.08)", marginBottom: 32 }}>
@@ -282,7 +292,7 @@ export default function InvestorPage() {
                 Qualified — Access Granted
               </div>
               <p style={{ ...mono, fontSize: 11, color: "rgba(255,255,255,0.55)", lineHeight: 1.9 }}>
-                Your profile meets our investor criteria. Use the access code below to enter the
+                Your profile meets our investor criteria. Use the access code below to open the
                 dashboard. A member of our team will follow up at{" "}
                 <strong style={{ color: "#fff" }}>{email}</strong>.
               </p>
@@ -314,7 +324,7 @@ export default function InvestorPage() {
         )}
 
         <div style={{ marginTop: 48, paddingTop: 20, borderTop: "1px solid #1c1b1c", ...mono, fontSize: 9, color: "#2a2a2a", letterSpacing: "0.08em", lineHeight: 1.9 }}>
-          NURV MALL — AL SHOROUK · Powered by JALOUR®<br />
+          NURV MALL — AL SHOROUK · Powered by JALOUR® · Hotline: 17836<br />
           This platform is for qualified investors only. Not financial advice.
         </div>
       </div>

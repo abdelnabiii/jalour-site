@@ -19,7 +19,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-jalour-black/80 via-jalour-black/70 to-jalour-black" />
         <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-32 md:px-10">
           <p className="text-xs tracking-jalour uppercase text-jalour-grey">
-            Jalour &mdash; 2025
+            Jalour &mdash; 2026
           </p>
           <h1 className="mt-6 max-w-3xl font-display text-5xl font-semibold uppercase leading-[1.05] tracking-tight text-jalour-white md:text-7xl">
             Beyond Spaces.
