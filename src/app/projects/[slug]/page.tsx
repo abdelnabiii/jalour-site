@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PROJECTS, getProject } from "@/lib/projects";
-import ContactForm from "@/components/ContactForm";
 
 function fmtEGP(n: number) {
   return "EGP " + Math.round(n).toLocaleString("en-EG");
@@ -267,21 +266,153 @@ export default async function ProjectDetailPage({
         </section>
       )}
 
-      {/* Register interest */}
+      {/* Why fractional ownership — investment philosophy */}
+      {project.investmentModel && (
+        <section className="border-b border-white/10 bg-jalour-black py-20">
+          <div className="mx-auto max-w-7xl px-6 md:px-10">
+            <div className="grid gap-16 md:grid-cols-2">
+              <div>
+                <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+                  Why We Built This
+                </p>
+                <h2 className="mt-3 font-display text-3xl font-semibold uppercase leading-tight text-jalour-white md:text-4xl">
+                  We Believe Every Serious Investor Deserves a Seat at the Table
+                </h2>
+                <p className="mt-6 text-sm leading-relaxed text-jalour-grey">
+                  For too long, premium commercial real estate was accessible only to institutions
+                  and a handful of ultra-high-net-worth individuals. A single unit at NURV could
+                  cost upwards of EGP 6 million — placing it out of reach for most serious investors,
+                  regardless of their ambition or capability.
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-jalour-grey">
+                  We designed the fractional model to change that. By dividing each unit into{" "}
+                  {project.investmentModel.sharesPerUnit} equal shares, we make it possible to enter
+                  from as little as{" "}
+                  <span className="text-jalour-white font-medium">
+                    {fmtEGP(project.investmentModel.entryFrom)}
+                  </span>{" "}
+                  — without compromising on the quality, location, or returns of the asset itself.
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-jalour-grey">
+                  Your share is legally yours. The rental income is yours. The appreciation is yours.
+                  We simply made it possible for more people to own a piece of something real.
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+                  This Is Just the Beginning
+                </p>
+                <h2 className="mt-3 font-display text-3xl font-semibold uppercase leading-tight text-jalour-white md:text-4xl">
+                  Start Small. Grow With Us.
+                </h2>
+                <p className="mt-6 text-sm leading-relaxed text-jalour-grey">
+                  We are not looking for one-time transactions. We are building a community of investors
+                  who grow with Jalour — project by project, share by share.
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-jalour-grey">
+                  Start with one share. As rental income begins in Year{" "}
+                  {project.investmentModel.rentalIncomeStartYear} and your asset appreciates, reinvest
+                  your returns into more shares — or into the next Jalour project. There is no ceiling
+                  on where this journey takes you.
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-jalour-grey">
+                  The investors who start early and stay consistent are the ones who build real wealth.
+                  NURV is your first step.
+                </p>
+
+                <div className="mt-8 grid grid-cols-3 gap-px overflow-hidden bg-white/10">
+                  {[
+                    { label: "Year 1", note: "Capital appreciation begins" },
+                    { label: `Year ${project.investmentModel.rentalIncomeStartYear}`, note: "Rental income distributed" },
+                    { label: "Year 5+", note: "Reinvest & compound" },
+                  ].map((item) => (
+                    <div key={item.label} className="bg-jalour-black p-5">
+                      <p className="font-display text-lg font-semibold uppercase text-jalour-blue">
+                        {item.label}
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-jalour-grey">{item.note}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Register interest — gated investor form */}
       <section id="interested" className="bg-jalour-black py-20">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
-          <p className="text-xs tracking-jalour uppercase text-jalour-grey">
-            Register Interest
-          </p>
-          <h2 className="mt-4 max-w-2xl font-display text-3xl font-semibold uppercase leading-tight text-jalour-white md:text-4xl">
-            Tell us what you&rsquo;re looking for
-          </h2>
-          <p className="mt-4 max-w-md text-sm leading-relaxed text-jalour-grey">
-            Our team will reach out with tailored unit recommendations and a
-            personalised payment plan within one business day.
-          </p>
-          <div className="mt-10 max-w-xl">
-            <ContactForm projectName={project.name} />
+          <div className="grid gap-16 md:grid-cols-2">
+            <div>
+              <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+                Start Your Journey
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-semibold uppercase leading-tight text-jalour-white md:text-4xl">
+                Ready to Invest?
+              </h2>
+              <p className="mt-6 text-sm leading-relaxed text-jalour-grey">
+                Click below to begin your investor application. The process takes under three
+                minutes. Qualified applicants get immediate access to the full pricing dashboard,
+                ROI calculator, and payment scenarios.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-jalour-grey">
+                Our team will follow up personally within one business day with a tailored
+                recommendation based on your profile and budget.
+              </p>
+              <div className="mt-10 flex flex-col gap-4 max-w-xs">
+                <a
+                  href="/investor"
+                  className="border border-jalour-blue bg-jalour-blue px-7 py-4 text-center text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:bg-transparent hover:text-jalour-blue"
+                >
+                  Apply for Investor Access &rarr;
+                </a>
+                <a
+                  href="tel:17836"
+                  className="border border-white/20 px-7 py-4 text-center text-xs tracking-jalour uppercase text-jalour-grey transition-colors hover:border-jalour-blue hover:text-jalour-white"
+                >
+                  Call Us: 17836
+                </a>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-8">
+              {[
+                {
+                  step: "01",
+                  title: "Apply in 3 Minutes",
+                  body: "Fill in your investor profile — no ID required, no documents, just a few questions about you and your goals.",
+                },
+                {
+                  step: "02",
+                  title: "Instant Dashboard Access",
+                  body: "Qualifying investors get immediate access to the full NURV pricing and ROI dashboard, with real numbers for every unit.",
+                },
+                {
+                  step: "03",
+                  title: "Personal Follow-Up",
+                  body: "A Jalour advisor reaches out within one business day with a tailored unit recommendation and payment plan built around your budget.",
+                },
+                {
+                  step: "04",
+                  title: "Secure Your Share",
+                  body: "Choose your unit and share count, sign your contract, and begin your journey as a NURV investor.",
+                },
+              ].map((item) => (
+                <div key={item.step} className="flex gap-6">
+                  <span className="font-display text-2xl font-semibold text-jalour-blue/25 shrink-0 leading-none mt-1">
+                    {item.step}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-sm font-semibold uppercase tracking-jalour text-jalour-white">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-xs leading-relaxed text-jalour-grey">{item.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
