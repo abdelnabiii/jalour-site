@@ -5,6 +5,10 @@ import { notFound } from "next/navigation";
 import { PROJECTS, getProject } from "@/lib/projects";
 import ContactForm from "@/components/ContactForm";
 
+function fmtEGP(n: number) {
+  return "EGP " + Math.round(n).toLocaleString("en-EG");
+}
+
 export function generateStaticParams() {
   return PROJECTS.filter((p) => !p.comingSoon).map((p) => ({ slug: p.slug }));
 }
@@ -72,17 +76,21 @@ export default async function ProjectDetailPage({
         </div>
       </section>
 
+      {/* Overview */}
       <section className="border-b border-white/10 bg-jalour-black py-20">
         <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3 md:px-10">
           <div className="md:col-span-2">
             {project.description.map((paragraph, i) => (
-              <p
-                key={i}
-                className="mb-4 text-sm leading-relaxed text-jalour-grey"
-              >
+              <p key={i} className="mb-4 text-sm leading-relaxed text-jalour-grey">
                 {paragraph}
               </p>
             ))}
+            {project.partnerName && (
+              <p className="mt-6 text-xs tracking-jalour uppercase text-jalour-grey">
+                Developed in partnership with{" "}
+                <span className="text-jalour-white">{project.partnerName}</span>
+              </p>
+            )}
 
             {project.floors && (
               <div className="mt-10 grid gap-px overflow-hidden bg-white/10 sm:grid-cols-2 md:grid-cols-4">
@@ -110,16 +118,185 @@ export default async function ProjectDetailPage({
                 Download Brochure
               </a>
             )}
+            {project.investorToolUrl && (
+              <a
+                href={project.investorToolUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-jalour-blue px-7 py-3 text-center text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:bg-jalour-blue"
+              >
+                ROI & Payment Calculator &rarr;
+              </a>
+            )}
             <a
               href="#interested"
               className="border border-white/30 px-7 py-3 text-center text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:border-jalour-blue hover:text-jalour-blue"
             >
-              I&rsquo;m Interested
+              Register Interest
             </a>
           </div>
         </div>
       </section>
 
+      {/* Investment model */}
+      {project.investmentModel && (
+        <section className="border-b border-white/10 bg-jalour-black py-20">
+          <div className="mx-auto max-w-7xl px-6 md:px-10">
+            <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+              Fractional Ownership
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-semibold uppercase leading-tight text-jalour-white md:text-4xl">
+              Own Part of {project.name}
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-jalour-grey">
+              Ground-floor commercial units divided into {project.investmentModel.sharesPerUnit} equal shares —
+              individually priced, professionally managed, income-generating from Year{" "}
+              {project.investmentModel.rentalIncomeStartYear}, with capital appreciation from Year{" "}
+              {project.investmentModel.appreciationStartYear}.
+            </p>
+
+            <div className="mt-10 grid gap-px overflow-hidden bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  label: "Entry From",
+                  value: fmtEGP(project.investmentModel.entryFrom),
+                  note: "per share",
+                },
+                {
+                  label: "Ownership Per Share",
+                  value: project.investmentModel.ownershipPerShare,
+                  note: `of selected unit (${project.investmentModel.sharesPerUnit} shares total)`,
+                },
+                {
+                  label: "Max Instalment Term",
+                  value: `${project.investmentModel.maxTermMonths} months`,
+                  note: project.investmentModel.interestFree ? "interest-free" : "",
+                },
+                {
+                  label: "Rental Income Starts",
+                  value: `Year ${project.investmentModel.rentalIncomeStartYear}`,
+                  note: `Capital appreciation from Year ${project.investmentModel.appreciationStartYear}`,
+                },
+              ].map((stat) => (
+                <div key={stat.label} className="bg-jalour-black p-8">
+                  <span className="text-xs tracking-jalour uppercase text-jalour-grey">
+                    {stat.label}
+                  </span>
+                  <p className="mt-3 font-display text-2xl font-semibold uppercase text-jalour-blue">
+                    {stat.value}
+                  </p>
+                  {stat.note && (
+                    <p className="mt-1 text-xs text-jalour-grey">{stat.note}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* How it works */}
+            <div className="mt-14">
+              <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+                How It Works
+              </p>
+              <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {[
+                  {
+                    step: "01",
+                    title: "Choose a Unit & Share Count",
+                    body: `Pick from ${project.units?.length ?? 11} ground floor units and decide how many shares — 1 to ${project.investmentModel.maxSharesPerUnit} — you'd like to hold in it.`,
+                  },
+                  {
+                    step: "02",
+                    title: "Finance at Your Pace",
+                    body: `Instalments run up to ${project.investmentModel.maxTermMonths} months, interest-free, calculated on your share investment only — never the full unit value.`,
+                  },
+                  {
+                    step: "03",
+                    title: "Receive Your Contract",
+                    body: "Your ownership is documented as a registered share interest in the physical unit — held in your name.",
+                  },
+                  {
+                    step: "04",
+                    title: "Collect Returns",
+                    body: `Capital appreciation applies from Year ${project.investmentModel.appreciationStartYear}. Rental income is distributed from Year ${project.investmentModel.rentalIncomeStartYear} after construction and leasing.`,
+                  },
+                ].map((item) => (
+                  <div key={item.step} className="border-t border-jalour-blue pt-6">
+                    <span className="font-display text-3xl font-semibold text-jalour-blue/30">
+                      {item.step}
+                    </span>
+                    <h3 className="mt-3 font-display text-sm font-semibold uppercase tracking-jalour text-jalour-white">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 text-xs leading-relaxed text-jalour-grey">
+                      {item.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-10">
+              <a
+                href={project.investorToolUrl ?? "#interested"}
+                target={project.investorToolUrl ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                className="inline-block border border-jalour-blue bg-jalour-blue px-7 py-3 text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:bg-transparent hover:text-jalour-blue"
+              >
+                Open ROI & Payment Calculator &rarr;
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Ground floor units table */}
+      {project.units && project.units.length > 0 && (
+        <section className="border-b border-white/10 bg-jalour-black py-20">
+          <div className="mx-auto max-w-7xl px-6 md:px-10">
+            <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+              Ground Floor — Currently Available
+            </p>
+            <h2 className="mt-3 font-display text-2xl font-semibold uppercase leading-tight text-jalour-white">
+              Unit Price List
+            </h2>
+            <p className="mt-3 text-xs text-jalour-grey">
+              Share price = gross area &times; rate per m&sup2; &divide; {project.units[0].totalShares} shares. Min 1 share, max {project.investmentModel?.maxSharesPerUnit ?? 4} per unit.
+            </p>
+            <div className="mt-8 overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    {["Unit", "Net m²", "Gross m²", "Rate / m²", "Unit Value", "Share Price"].map((h) => (
+                      <th key={h} className="py-3 pr-6 tracking-jalour uppercase text-jalour-grey font-normal">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {project.units.map((u) => (
+                    <tr key={u.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+                      <td className="py-3 pr-6 font-display text-sm font-semibold uppercase text-jalour-white">
+                        {u.name}
+                      </td>
+                      <td className="py-3 pr-6 text-jalour-grey">{u.netArea} m²</td>
+                      <td className="py-3 pr-6 text-jalour-grey">{u.grossArea} m²</td>
+                      <td className="py-3 pr-6 text-jalour-grey">{fmtEGP(u.ratePerM2)}</td>
+                      <td className="py-3 pr-6 text-jalour-grey">{fmtEGP(u.unitValue)}</td>
+                      <td className="py-3 pr-6 font-semibold text-jalour-blue">{fmtEGP(u.sharePrice)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 text-[10px] leading-relaxed text-jalour-grey/60">
+              Gross area = net area &times; 1.50. Figures are illustrative and subject to change. Refer to your share contract for binding terms.
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* Gallery */}
       {project.gallery.length > 1 && (
         <section className="border-b border-white/10 bg-jalour-black py-20">
           <div className="mx-auto max-w-7xl px-6 md:px-10">
@@ -143,14 +320,19 @@ export default async function ProjectDetailPage({
         </section>
       )}
 
+      {/* Register interest */}
       <section id="interested" className="bg-jalour-black py-20">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <p className="text-xs tracking-jalour uppercase text-jalour-grey">
-            Interested in {project.name}?
+            Register Interest
           </p>
           <h2 className="mt-4 max-w-2xl font-display text-3xl font-semibold uppercase leading-tight text-jalour-white md:text-4xl">
-            Tell us a bit about what you&rsquo;re looking for
+            Tell us what you&rsquo;re looking for
           </h2>
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-jalour-grey">
+            Our team will reach out with tailored unit recommendations and a
+            personalised payment plan within one business day.
+          </p>
           <div className="mt-10 max-w-xl">
             <ContactForm projectName={project.name} />
           </div>

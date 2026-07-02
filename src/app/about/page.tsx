@@ -7,6 +7,27 @@ export const metadata: Metadata = {
     "Jalour's purpose, mission, values, and visual identity as a premium commercial and administrative real estate company.",
 };
 
+const PARTNERS = [
+  {
+    name: "Meadis Group",
+    role: "Development Partner",
+    description:
+      "Strategic co-developer on Nurv, El Shorouk — bringing market expertise and operational depth to Jalour's first landmark commercial destination.",
+    // AR: [partner description in Arabic — to be supplied]
+  },
+  // Add additional partners here
+];
+
+const PARTNER_TESTIMONIALS: {
+  quote: string;
+  author: string;
+  title: string;
+  company: string;
+}[] = [
+  // Testimonials from partners will be added here.
+  // Structure: { quote: "...", author: "Name", title: "Title", company: "Company" }
+];
+
 const VALUES = [
   {
     title: "Excellence in Service",
@@ -80,7 +101,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-jalour-black py-20">
+      <section className="border-b border-white/10 bg-jalour-black py-20">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <p className="text-xs tracking-jalour uppercase text-jalour-grey">
             Brand Values
@@ -99,6 +120,90 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Partners */}
+      <section className="border-b border-white/10 bg-jalour-black py-20">
+        <div className="mx-auto max-w-7xl px-6 md:px-10">
+          <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+            Partners
+          </p>
+          <h2 className="mt-3 font-display text-3xl font-semibold uppercase leading-tight text-jalour-white md:text-4xl">
+            Built Together
+          </h2>
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-jalour-grey">
+            Jalour develops projects in partnership with best-in-class operators
+            and investors who share our commitment to quality and impact.
+          </p>
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {PARTNERS.map((partner) => (
+              <div
+                key={partner.name}
+                className="border border-white/10 p-8 hover:border-jalour-blue/40 transition-colors"
+              >
+                <span className="text-xs tracking-jalour uppercase text-jalour-blue">
+                  {partner.role}
+                </span>
+                <h3 className="mt-3 font-display text-xl font-semibold uppercase tracking-jalour text-jalour-white">
+                  {partner.name}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-jalour-grey">
+                  {partner.description}
+                </p>
+              </div>
+            ))}
+            {/* Placeholder for additional partners */}
+            <div className="border border-dashed border-white/10 p-8 flex items-center justify-center">
+              <p className="text-center text-xs tracking-jalour uppercase text-jalour-grey/40">
+                More partners to be announced
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partner Testimonials */}
+      {PARTNER_TESTIMONIALS.length > 0 ? (
+        <section className="bg-jalour-black py-20">
+          <div className="mx-auto max-w-7xl px-6 md:px-10">
+            <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+              From Our Partners
+            </p>
+            <div className="mt-10 grid gap-8 md:grid-cols-2">
+              {PARTNER_TESTIMONIALS.map((t) => (
+                <blockquote
+                  key={t.author}
+                  className="border-l-2 border-jalour-blue pl-6"
+                >
+                  <p className="text-sm leading-relaxed text-jalour-grey">
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                  <footer className="mt-4">
+                    <span className="text-xs tracking-jalour uppercase text-jalour-white">
+                      {t.author}
+                    </span>
+                    <span className="ml-2 text-xs text-jalour-grey">
+                      — {t.title}, {t.company}
+                    </span>
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className="bg-jalour-black py-20">
+          <div className="mx-auto max-w-7xl px-6 md:px-10">
+            <p className="text-xs tracking-jalour uppercase text-jalour-grey">
+              From Our Partners
+            </p>
+            <div className="mt-8 border border-dashed border-white/10 p-12 text-center">
+              <p className="text-xs tracking-jalour uppercase text-jalour-grey/40">
+                Partner testimonials coming soon
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
