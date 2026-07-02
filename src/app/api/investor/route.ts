@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sendMail } from "@/lib/mailer";
+import { db } from "@/lib/db";
 
 const INVESTOR_RECIPIENT = "selection@jalour.com";
 
@@ -51,6 +52,22 @@ export async function POST(request: Request) {
   ].filter(([, v]) => v);
 
   try {
+    const pool = await db();
+    await pool.query(
+      `INSERT INTO investor_applications
+        (name, phone, email, address, occupation, education, social_links, budget, liquidity, other_projects, objective, club_memberships, spouse_name, spouse_occupation)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, phone, email, address, occupation, education, socialLinks, budget, liquidity, otherProjects, objective, clubMemberships, spouseName, spouseOccupation]
+    );
+  } catch (err) {
+    console.error("Failed to save investor application:", err);
+    return NextResponse.json(
+      { error: "Something went wrong submitting your application. Please try again." },
+      { status: 500 }
+    );
+  }
+
+  try {
     await sendMail({
       to: INVESTOR_RECIPIENT,
       replyTo: email,
@@ -58,11 +75,7 @@ export async function POST(request: Request) {
       text: lines.map(([k, v]) => `${k}: ${v}`).join("\n"),
     });
   } catch (err) {
-    console.error("Failed to send investor application email:", err);
-    return NextResponse.json(
-      { error: "Something went wrong submitting your application. Please try again." },
-      { status: 500 }
-    );
+    console.error("Failed to send investor application notification email:", err);
   }
 
   return NextResponse.json({ ok: true });

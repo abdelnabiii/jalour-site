@@ -2,21 +2,12 @@
 
 import { useState } from "react";
 
-const DASHBOARD_PASSWORD = "NURV2026";
-
-type Stage = "form" | "review" | "verify" | "dashboard" | "declined";
+type Stage = "form" | "review" | "submitted" | "login" | "dashboard";
 
 const mono: React.CSSProperties = { fontFamily: "'Space Mono', monospace" };
 
-const DISQUALIFY = {
-  budget: ["Below EGP 500,000"],
-  liquidity: ["No available liquid capital"],
-};
-
 export default function InvestorPage() {
   const [stage, setStage] = useState<Stage>("form");
-  const [passwordInput, setPasswordInput] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
   const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -40,14 +31,13 @@ export default function InvestorPage() {
   const [spouseName, setSpouseName] = useState("");
   const [spouseOccupation, setSpouseOccupation] = useState("");
 
-  function isDisqualified() {
-    return (
-      DISQUALIFY.budget.includes(budget) ||
-      DISQUALIFY.liquidity.includes(liquidity)
-    );
-  }
+  // Returning-applicant login
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginCode, setLoginCode] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loggingIn, setLoggingIn] = useState(false);
 
-  async function handleFormSubmit(e: React.FormEvent) {
+  function handleReviewSubmit(e: React.FormEvent) {
     e.preventDefault();
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!name.trim() || !phone.trim() || !emailOk || !occupation.trim() || !education.trim() || !budget || !liquidity || !objective) {
@@ -55,7 +45,12 @@ export default function InvestorPage() {
       return;
     }
     setFormError("");
+    setStage("review");
+  }
+
+  async function handleConfirmSubmit() {
     setSubmitting(true);
+    setFormError("");
     try {
       const res = await fetch("/api/investor", {
         method: "POST",
@@ -70,7 +65,7 @@ export default function InvestorPage() {
         const body = await res.json().catch(() => null);
         throw new Error(body?.error || "Something went wrong. Please try again.");
       }
-      setStage("review");
+      setStage("submitted");
     } catch (err) {
       setFormError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -78,21 +73,25 @@ export default function InvestorPage() {
     }
   }
 
-  function handleReviewConfirm() {
-    if (isDisqualified()) {
-      setStage("declined");
-    } else {
-      setPasswordInput(DASHBOARD_PASSWORD);
-      setStage("verify");
-    }
-  }
-
-  function handlePasswordSubmit(e: React.FormEvent) {
+  async function handleLoginSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (passwordInput === DASHBOARD_PASSWORD) {
+    setLoginError("");
+    setLoggingIn(true);
+    try {
+      const res = await fetch("/api/investor/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: loginEmail, password: loginCode }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || "Incorrect email or access code.");
+      }
       setStage("dashboard");
-    } else {
-      setPasswordError(true);
+    } catch (err) {
+      setLoginError(err instanceof Error ? err.message : "Incorrect email or access code.");
+    } finally {
+      setLoggingIn(false);
     }
   }
 
@@ -100,7 +99,7 @@ export default function InvestorPage() {
     return (
       <div style={{ position: "fixed", inset: 0, background: "#0B0A0B" }}>
         <iframe
-          src="/nurv-dashboard.html"
+          src="/investor/dashboard"
           style={{ width: "100%", height: "100%", border: "none", display: "block" }}
           title="NURV Investor Dashboard"
         />
@@ -114,11 +113,21 @@ export default function InvestorPage() {
 
       <div style={{ width: "100%", maxWidth: 580 }}>
         {/* Logo */}
-        <div style={{ marginBottom: 48 }}>
-          <div style={{ fontWeight: 700, fontSize: 20, letterSpacing: "0.14em", textTransform: "uppercase" }}>NURV</div>
-          <div style={{ ...mono, fontSize: 9, letterSpacing: "0.2em", color: "#2E7CCC", textTransform: "uppercase", marginTop: 4 }}>
-            by JALOUR® — Private Investor Access
+        <div style={{ marginBottom: 48, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 20, letterSpacing: "0.14em", textTransform: "uppercase" }}>NURV</div>
+            <div style={{ ...mono, fontSize: 9, letterSpacing: "0.2em", color: "#2E7CCC", textTransform: "uppercase", marginTop: 4 }}>
+              by JALOUR® — Private Investor Access
+            </div>
           </div>
+          {(stage === "form" || stage === "submitted") && (
+            <button
+              onClick={() => setStage("login")}
+              style={{ ...mono, background: "transparent", border: "none", color: "#6b6b6b", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer", textDecoration: "underline" }}
+            >
+              Have an access code?
+            </button>
+          )}
         </div>
 
         {/* ── FORM ── */}
@@ -135,7 +144,7 @@ export default function InvestorPage() {
               three minutes. All information is kept strictly confidential.
             </p>
 
-            <form onSubmit={handleFormSubmit}>
+            <form onSubmit={handleReviewSubmit}>
               <Divider label="Personal Information" />
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 20px" }}>
@@ -221,14 +230,12 @@ export default function InvestorPage() {
                 <p style={{ ...mono, fontSize: 11, color: "#e05555", marginBottom: 16 }}>{formError}</p>
               )}
 
-              <button type="submit" disabled={submitting} style={{ ...primaryBtn, ...(submitting ? { opacity: 0.6, cursor: "not-allowed" } : {}) }}>
-                {submitting ? "Submitting…" : "Submit Application →"}
-              </button>
+              <button type="submit" style={primaryBtn}>Review Application →</button>
             </form>
 
             <p style={{ ...mono, fontSize: 9, color: "#3a3a3a", letterSpacing: "0.06em", lineHeight: 1.8, marginTop: 28 }}>
-              * Required fields. Applications are reviewed immediately. Qualifying investors receive
-              dashboard access within this session.
+              * Required fields. Our team reviews every application — if selected, you'll receive a
+              unique access code by email.
             </p>
           </>
         )}
@@ -237,10 +244,10 @@ export default function InvestorPage() {
         {stage === "review" && (
           <>
             <div style={{ ...mono, fontSize: 9, letterSpacing: "0.25em", color: "#2E7CCC", textTransform: "uppercase", marginBottom: 8 }}>
-              Application Received
+              Confirm Details
             </div>
             <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2, marginBottom: 24 }}>
-              Reviewing Your Profile
+              Review Your Application
             </h1>
 
             <div style={{ background: "#1A191A", border: "1px solid #2A292A", padding: "24px", marginBottom: 24 }}>
@@ -269,31 +276,33 @@ export default function InvestorPage() {
               })}
             </div>
 
-            <button onClick={handleReviewConfirm} style={primaryBtn}>Confirm & Get Access →</button>
-            <button onClick={() => setStage("form")} style={{ ...primaryBtn, background: "transparent", borderColor: "#2A292A", color: "#6b6b6b", marginTop: 10 }}>
+            {formError && (
+              <p style={{ ...mono, fontSize: 11, color: "#e05555", marginBottom: 16 }}>{formError}</p>
+            )}
+
+            <button onClick={handleConfirmSubmit} disabled={submitting} style={{ ...primaryBtn, ...(submitting ? { opacity: 0.6, cursor: "not-allowed" } : {}) }}>
+              {submitting ? "Submitting…" : "Confirm & Submit →"}
+            </button>
+            <button onClick={() => setStage("form")} disabled={submitting} style={{ ...primaryBtn, background: "transparent", borderColor: "#2A292A", color: "#6b6b6b", marginTop: 10 }}>
               ← Edit Application
             </button>
           </>
         )}
 
-        {/* ── DECLINED ── */}
-        {stage === "declined" && (
+        {/* ── SUBMITTED ── */}
+        {stage === "submitted" && (
           <>
-            <div style={{ padding: "28px 24px", border: "1px solid rgba(200,169,110,0.25)", background: "rgba(200,169,110,0.06)", marginBottom: 28 }}>
-              <div style={{ ...mono, fontSize: 9, letterSpacing: "0.2em", color: "#C8A96E", textTransform: "uppercase", marginBottom: 10 }}>
-                Application Status
+            <div style={{ padding: "28px 24px", border: "1px solid #1a4a7a", background: "rgba(46,124,204,0.08)", marginBottom: 28 }}>
+              <div style={{ ...mono, fontSize: 9, letterSpacing: "0.2em", color: "#2E7CCC", textTransform: "uppercase", marginBottom: 10 }}>
+                Application Received
               </div>
-              <h2 style={{ fontSize: 18, fontWeight: 700, letterSpacing: "0.04em", color: "#C8A96E", marginBottom: 12 }}>
-                Not Eligible at This Time
+              <h2 style={{ fontSize: 18, fontWeight: 700, letterSpacing: "0.04em", marginBottom: 12 }}>
+                Under Review
               </h2>
-              <p style={{ ...mono, fontSize: 11, color: "rgba(255,255,255,0.5)", lineHeight: 1.9 }}>
-                NURV shares are structured for investors with available capital ready to deploy.
-                Based on your profile, this opportunity may not be the right fit at this stage.
-              </p>
-              <p style={{ ...mono, fontSize: 11, color: "rgba(255,255,255,0.5)", lineHeight: 1.9, marginTop: 12 }}>
-                Our team will follow up at <strong style={{ color: "#fff" }}>{email}</strong> if
-                a suitable opportunity arises. You can also reach us on{" "}
-                <strong style={{ color: "#fff" }}>17836</strong>.
+              <p style={{ ...mono, fontSize: 11, color: "rgba(255,255,255,0.55)", lineHeight: 1.9 }}>
+                Thank you — your application is being reviewed by our team. If selected, you&apos;ll
+                receive a unique access code at <strong style={{ color: "#fff" }}>{email}</strong> to
+                open the investor dashboard.
               </p>
             </div>
             <a href="/" style={{ ...primaryBtn, display: "block", textDecoration: "none", textAlign: "center" }}>
@@ -302,41 +311,38 @@ export default function InvestorPage() {
           </>
         )}
 
-        {/* ── VERIFY ── */}
-        {stage === "verify" && (
+        {/* ── LOGIN (returning applicant) ── */}
+        {stage === "login" && (
           <>
-            <div style={{ padding: "20px 24px", border: "1px solid #1a4a7a", background: "rgba(46,124,204,0.08)", marginBottom: 32 }}>
-              <div style={{ ...mono, fontSize: 9, letterSpacing: "0.2em", color: "#2E7CCC", textTransform: "uppercase", marginBottom: 8 }}>
-                Qualified — Access Granted
-              </div>
-              <p style={{ ...mono, fontSize: 11, color: "rgba(255,255,255,0.55)", lineHeight: 1.9 }}>
-                Your profile meets our investor criteria. Use the access code below to open the
-                dashboard. A member of our team will follow up at{" "}
-                <strong style={{ color: "#fff" }}>{email}</strong>.
-              </p>
+            <div style={{ ...mono, fontSize: 9, letterSpacing: "0.25em", color: "#2E7CCC", textTransform: "uppercase", marginBottom: 8 }}>
+              Approved Investors
             </div>
+            <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2, marginBottom: 24 }}>
+              Enter Your Access Code
+            </h1>
 
-            <div style={{ ...mono, fontSize: 9, letterSpacing: "0.2em", color: "#6b6b6b", textTransform: "uppercase", marginBottom: 8 }}>
-              Your Access Code
-            </div>
-            <div style={{ padding: "18px 20px", border: "1px solid #2A292A", background: "#1A191A", ...mono, fontSize: 26, fontWeight: 700, letterSpacing: "0.35em", color: "#C8A96E", marginBottom: 28, textAlign: "center" }}>
-              {DASHBOARD_PASSWORD}
-            </div>
-
-            <form onSubmit={handlePasswordSubmit}>
-              <Field label="Enter Access Code to Open Dashboard">
+            <form onSubmit={handleLoginSubmit}>
+              <Field label="Email Address">
+                <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} placeholder="you@company.com" style={inputStyle} />
+              </Field>
+              <Field label="Access Code">
                 <input
                   type="text"
-                  value={passwordInput}
-                  onChange={e => { setPasswordInput(e.target.value.toUpperCase()); setPasswordError(false); }}
-                  placeholder="Access code"
-                  style={{ ...inputStyle, letterSpacing: "0.2em", textTransform: "uppercase", ...(passwordError ? { borderColor: "#e05555" } : {}) }}
+                  value={loginCode}
+                  onChange={e => { setLoginCode(e.target.value.toUpperCase()); setLoginError(""); }}
+                  placeholder="XXXXX-XXXXX"
+                  style={{ ...inputStyle, letterSpacing: "0.2em", textTransform: "uppercase", ...(loginError ? { borderColor: "#e05555" } : {}) }}
                 />
               </Field>
-              {passwordError && (
-                <p style={{ ...mono, fontSize: 11, color: "#e05555", marginBottom: 16 }}>Incorrect code. Please try again.</p>
+              {loginError && (
+                <p style={{ ...mono, fontSize: 11, color: "#e05555", marginBottom: 16 }}>{loginError}</p>
               )}
-              <button type="submit" style={primaryBtn}>Open Dashboard →</button>
+              <button type="submit" disabled={loggingIn} style={{ ...primaryBtn, ...(loggingIn ? { opacity: 0.6, cursor: "not-allowed" } : {}) }}>
+                {loggingIn ? "Verifying…" : "Open Dashboard →"}
+              </button>
+              <button type="button" onClick={() => setStage("form")} style={{ ...primaryBtn, background: "transparent", borderColor: "#2A292A", color: "#6b6b6b", marginTop: 10 }}>
+                ← Back to Application
+              </button>
             </form>
           </>
         )}

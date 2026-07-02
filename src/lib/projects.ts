@@ -94,7 +94,7 @@ export const PROJECTS: Project[] = [
       { id: "S11", name: "Shop 11", netArea: 34.02, grossArea: 51.03, ratePerM2: 210000, unitValue: 10716300, sharePrice: 315185, totalShares: 34 },
     ],
     brochureUrl: "/brochures/nurv-brochure.pdf",
-    investorToolUrl: "/nurv-investor-tool.html",
+    investorToolUrl: "/investor/tool",
   },
   {
     slug: "project-two",
