@@ -18,6 +18,7 @@ export default function InvestorPage() {
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [formError, setFormError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   // Personal
   const [name, setName] = useState("");
@@ -46,7 +47,7 @@ export default function InvestorPage() {
     );
   }
 
-  function handleFormSubmit(e: React.FormEvent) {
+  async function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!name.trim() || !phone.trim() || !emailOk || !occupation.trim() || !education.trim() || !budget || !liquidity || !objective) {
@@ -54,12 +55,27 @@ export default function InvestorPage() {
       return;
     }
     setFormError("");
-    console.log("NURV investor application:", {
-      name, phone, email, address, occupation, education, socialLinks,
-      budget, liquidity, otherProjects, objective,
-      clubMemberships, spouseName, spouseOccupation,
-    });
-    setStage("review");
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/investor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name, phone, email, address, occupation, education, socialLinks,
+          budget, liquidity, otherProjects, objective,
+          clubMemberships, spouseName, spouseOccupation,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || "Something went wrong. Please try again.");
+      }
+      setStage("review");
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function handleReviewConfirm() {
@@ -205,7 +221,9 @@ export default function InvestorPage() {
                 <p style={{ ...mono, fontSize: 11, color: "#e05555", marginBottom: 16 }}>{formError}</p>
               )}
 
-              <button type="submit" style={primaryBtn}>Submit Application →</button>
+              <button type="submit" disabled={submitting} style={{ ...primaryBtn, ...(submitting ? { opacity: 0.6, cursor: "not-allowed" } : {}) }}>
+                {submitting ? "Submitting…" : "Submit Application →"}
+              </button>
             </form>
 
             <p style={{ ...mono, fontSize: 9, color: "#3a3a3a", letterSpacing: "0.06em", lineHeight: 1.8, marginTop: 28 }}>
