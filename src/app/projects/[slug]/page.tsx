@@ -118,16 +118,12 @@ export default async function ProjectDetailPage({
                 Download Brochure
               </a>
             )}
-            {project.investorToolUrl && (
-              <a
-                href={project.investorToolUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-jalour-blue px-7 py-3 text-center text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:bg-jalour-blue"
-              >
-                ROI & Payment Calculator &rarr;
-              </a>
-            )}
+            <a
+              href="/investor"
+              className="border border-jalour-blue px-7 py-3 text-center text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:bg-jalour-blue"
+            >
+              ROI & Payment Calculator &rarr;
+            </a>
             <a
               href="#interested"
               className="border border-white/30 px-7 py-3 text-center text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:border-jalour-blue hover:text-jalour-blue"
@@ -237,61 +233,12 @@ export default async function ProjectDetailPage({
 
             <div className="mt-10">
               <a
-                href={project.investorToolUrl ?? "#interested"}
-                target={project.investorToolUrl ? "_blank" : undefined}
-                rel="noopener noreferrer"
+                href="/investor"
                 className="inline-block border border-jalour-blue bg-jalour-blue px-7 py-3 text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:bg-transparent hover:text-jalour-blue"
               >
                 Open ROI & Payment Calculator &rarr;
               </a>
             </div>
-          </div>
-        </section>
-      )}
-
-      {/* Ground floor units table */}
-      {project.units && project.units.length > 0 && (
-        <section className="border-b border-white/10 bg-jalour-black py-20">
-          <div className="mx-auto max-w-7xl px-6 md:px-10">
-            <p className="text-xs tracking-jalour uppercase text-jalour-grey">
-              Ground Floor — Currently Available
-            </p>
-            <h2 className="mt-3 font-display text-2xl font-semibold uppercase leading-tight text-jalour-white">
-              Unit Price List
-            </h2>
-            <p className="mt-3 text-xs text-jalour-grey">
-              Share price = gross area &times; rate per m&sup2; &divide; {project.units[0].totalShares} shares. Min 1 share, max {project.investmentModel?.maxSharesPerUnit ?? 4} per unit.
-            </p>
-            <div className="mt-8 overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    {["Unit", "Net m²", "Gross m²", "Rate / m²", "Unit Value", "Share Price"].map((h) => (
-                      <th key={h} className="py-3 pr-6 tracking-jalour uppercase text-jalour-grey font-normal">
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {project.units.map((u) => (
-                    <tr key={u.id} className="border-b border-white/5 hover:bg-white/[0.02]">
-                      <td className="py-3 pr-6 font-display text-sm font-semibold uppercase text-jalour-white">
-                        {u.name}
-                      </td>
-                      <td className="py-3 pr-6 text-jalour-grey">{u.netArea} m²</td>
-                      <td className="py-3 pr-6 text-jalour-grey">{u.grossArea} m²</td>
-                      <td className="py-3 pr-6 text-jalour-grey">{fmtEGP(u.ratePerM2)}</td>
-                      <td className="py-3 pr-6 text-jalour-grey">{fmtEGP(u.unitValue)}</td>
-                      <td className="py-3 pr-6 font-semibold text-jalour-blue">{fmtEGP(u.sharePrice)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-4 text-[10px] leading-relaxed text-jalour-grey/60">
-              Gross area = net area &times; 1.50. Figures are illustrative and subject to change. Refer to your share contract for binding terms.
-            </p>
           </div>
         </section>
       )}
