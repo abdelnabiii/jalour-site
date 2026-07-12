@@ -1,10 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { Space_Grotesk, Space_Mono } from "next/font/google";
+
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+const spaceMono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"] });
 
 type Stage = "form" | "review" | "submitted" | "login" | "dashboard";
 
-const mono: React.CSSProperties = { fontFamily: "'Space Mono', monospace" };
+const mono: React.CSSProperties = { fontFamily: spaceMono.style.fontFamily };
 
 export default function InvestorPage() {
   const [stage, setStage] = useState<Stage>("form");
@@ -108,9 +113,7 @@ export default function InvestorPage() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0B0A0B", color: "#fff", fontFamily: "'Space Grotesk', sans-serif", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
-      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-
+    <div style={{ minHeight: "100vh", background: "#0B0A0B", color: "#fff", fontFamily: spaceGrotesk.style.fontFamily, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
       <div style={{ width: "100%", maxWidth: 580 }}>
         {/* Logo */}
         <div style={{ marginBottom: 48, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -234,7 +237,7 @@ export default function InvestorPage() {
             </form>
 
             <p style={{ ...mono, fontSize: 9, color: "#3a3a3a", letterSpacing: "0.06em", lineHeight: 1.8, marginTop: 28 }}>
-              * Required fields. Our team reviews every application — if selected, you'll receive a
+              * Required fields. Our team reviews every application — if selected, you&apos;ll receive a
               unique access code by email.
             </p>
           </>
@@ -305,9 +308,9 @@ export default function InvestorPage() {
                 open the investor dashboard.
               </p>
             </div>
-            <a href="/" style={{ ...primaryBtn, display: "block", textDecoration: "none", textAlign: "center" }}>
+            <Link href="/" style={{ ...primaryBtn, display: "block", textDecoration: "none", textAlign: "center" }}>
               Return to Jalour.com
-            </a>
+            </Link>
           </>
         )}
 
@@ -359,7 +362,7 @@ export default function InvestorPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 18 }}>
-      <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.18em", color: "#6b6b6b", textTransform: "uppercase", marginBottom: 7 }}>
+      <label style={{ display: "block", fontFamily: spaceMono.style.fontFamily, fontSize: 9, letterSpacing: "0.18em", color: "#6b6b6b", textTransform: "uppercase", marginBottom: 7 }}>
         {label}
       </label>
       {children}
@@ -371,7 +374,7 @@ function Divider({ label }: { label: string }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "28px 0 22px" }}>
       <div style={{ height: 1, background: "#1c1b1c", flex: 1 }} />
-      <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.2em", color: "#3a3a3a", textTransform: "uppercase", whiteSpace: "nowrap" }}>{label}</span>
+      <span style={{ fontFamily: spaceMono.style.fontFamily, fontSize: 9, letterSpacing: "0.2em", color: "#3a3a3a", textTransform: "uppercase", whiteSpace: "nowrap" }}>{label}</span>
       <div style={{ height: 1, background: "#1c1b1c", flex: 1 }} />
     </div>
   );
@@ -391,7 +394,7 @@ const inputStyle: React.CSSProperties = {
   background: "#0B0A0B",
   border: "1px solid #2A292A",
   color: "#fff",
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: spaceMono.style.fontFamily,
   fontSize: 12,
   padding: "11px 13px",
   outline: "none",
@@ -404,7 +407,7 @@ const primaryBtn: React.CSSProperties = {
   background: "#2E7CCC",
   border: "1px solid #2E7CCC",
   color: "#fff",
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: spaceMono.style.fontFamily,
   fontSize: 10,
   letterSpacing: "0.15em",
   textTransform: "uppercase",

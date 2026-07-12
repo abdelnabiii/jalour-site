@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Custom server entry point, run directly by Node without transpilation.
+    "app.js",
   ]),
 ]);
 
