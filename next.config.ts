@@ -10,7 +10,6 @@ const nextConfig: NextConfig = {
   // bundle and the routes would 500. Force them into the trace.
   outputFileTracingIncludes: {
     "/investor/dashboard": ["./src/content/nurv-dashboard.html"],
-    "/investor/tool": ["./src/content/nurv-investor-tool.html"],
   },
 };
 

@@ -118,12 +118,6 @@ export default async function ProjectDetailPage({
               </a>
             )}
             <a
-              href="/investor"
-              className="border border-jalour-blue px-7 py-3 text-center text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:bg-jalour-blue"
-            >
-              ROI & Payment Calculator &rarr;
-            </a>
-            <a
               href="#interested"
               className="border border-white/30 px-7 py-3 text-center text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:border-jalour-blue hover:text-jalour-blue"
             >
@@ -235,7 +229,7 @@ export default async function ProjectDetailPage({
                 href="/investor"
                 className="inline-block border border-jalour-blue bg-jalour-blue px-7 py-3 text-xs tracking-jalour uppercase text-jalour-white transition-colors hover:bg-transparent hover:text-jalour-blue"
               >
-                Open ROI & Payment Calculator &rarr;
+                Apply for Investor Access &rarr;
               </a>
             </div>
           </div>
@@ -354,8 +348,8 @@ export default async function ProjectDetailPage({
               </h2>
               <p className="mt-6 text-sm leading-relaxed text-jalour-grey">
                 Click below to begin your investor application. The process takes under three
-                minutes. Qualified applicants get immediate access to the full pricing dashboard,
-                ROI calculator, and payment scenarios.
+                minutes. Qualified applicants get immediate access to the full pricing dashboard
+                and payment scenarios.
               </p>
               <p className="mt-4 text-sm leading-relaxed text-jalour-grey">
                 Our team will follow up personally within one business day with a tailored
