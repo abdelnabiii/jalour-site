@@ -29,15 +29,16 @@ const clamp = (v: number, lo: number, hi: number) =>
 
 /**
  * A native <video> scrubbed by scroll position, full-bleed within its own
- * pinned viewport. On its own it draws nothing over the frame once loaded — a
- * pure scrubber.
+ * pinned viewport. No canvas — the <video> element is what the viewer sees.
  *
- * ScrollTrigger only ever writes a *target time*. A single rAF loop eases an
- * internal playhead toward that target with frame-rate-independent
- * exponential damping, and is the only thing that ever seeks the decoder. A
- * seek is never issued while one is in flight: the newest requested time is
- * retained and drained on the `seeked` event, so there is no unbounded queue
- * and no backward jump from a stale value.
+ * ScrollTrigger only ever writes a *target time*. A single rAF loop tracks an
+ * internal playhead toward that target and is the only thing that ever seeks
+ * the decoder. Tracking is deliberately tight (light, frame-rate-independent
+ * smoothing) so the frame stays glued to the scroll position rather than
+ * drifting in behind it. A seek is never issued while one is in flight: the
+ * newest requested time is retained and applied on the `seeked` event, so the
+ * decoder is never flooded (which is what makes a scrub stutter) and there is
+ * no backlog or backward jump from a stale value.
  *
  * The video source is never dropped on cleanup, so the effect is safe under
  * React StrictMode's development double-invoke.
@@ -109,7 +110,7 @@ export default function ScrollVideo({
     let duration = video.duration || 0;
     let progress = 0; // raw scroll progress 0..1
     let target = 0; // desired video time from scroll
-    let playhead = 0; // eased time actually driving the decoder
+    let playhead = 0; // tracked time actually driving the decoder
     let seeking = false;
     let pending: number | null = null; // newest time requested during a seek
     let last = performance.now();
@@ -121,8 +122,11 @@ export default function ScrollVideo({
     let px = 0;
     let py = 0;
 
-    const SEEK_EPS = 1 / 48; // ~one frame; below this a seek is not worth it
-    const LAMBDA = 6.5; // damping strength (per second)
+    const SEEK_EPS = 1 / 60; // ~one frame; below this a seek is not worth it
+    // High damping = the playhead essentially snaps to the scroll position each
+    // frame. Lenis already smooths the scroll itself, so extra easing here only
+    // reads as lag; keep it minimal.
+    const LAMBDA = 20;
     const MAX_PARALLAX = 12; // px
 
     const readDuration = () => {
@@ -193,7 +197,8 @@ export default function ScrollVideo({
       last = now;
       const ease = 1 - Math.exp(-LAMBDA * dt);
 
-      // Ease the internal playhead toward the scroll-driven target.
+      // Track the internal playhead toward the scroll-driven target. With a
+      // high LAMBDA this is all but instant, so the frame stays on the scroll.
       playhead += (target - playhead) * ease;
 
       if (duration > 0) {
