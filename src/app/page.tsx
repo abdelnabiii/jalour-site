@@ -1,12 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PROJECTS } from "@/lib/projects";
+import HomeIntro from "@/components/nurv/HomeIntro";
 
 export default function Home() {
   const featured = PROJECTS.find((p) => p.slug === "nurv");
 
   return (
     <div>
+      {/* Nurv scroll-video intro — blueprint to landmark, scrubbed by scroll */}
+      <HomeIntro />
+
       {/* Hero */}
       <section className="relative flex min-h-[90vh] items-center overflow-hidden">
         <Image
